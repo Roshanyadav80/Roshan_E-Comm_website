@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>GreenHarvest Organics</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+        body {
+            padding-top: 50px;
+        }
+        .cart-container {
+            margin: 50px auto;
+            max-width: 800px;
+        }
+        .cart-header {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+        }
+        .cart-item img {
+            width: 100px;
+            height: 100px;
+        }
+        .cart-item h4 {
+            margin: 0;
+        }
+        .cart-item input {
+            width: 50px;
+            text-align: center;
+        }
+        .cart-total {
+            text-align: right;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .checkout-btn {
+            margin-top: 20px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container cart-container">
+    <div class="cart-header">
+        <h2>Your Cart</h2>
+    </div>
+
+    <div id="cartItems">
+        <div class="cart-item">
+            <img src="images/caret.jpg" alt="CARET">
+            <h4>CARET</h4>
+            <input type="number" value="1" min="1" class="item-quantity">
+            <p class="item-price">Rs.80</p>
+            <button class="btn btn-danger remove-item">Remove</button>
+        </div>
+    </div>
+
+    <div class="cart-total">
+        Total: <span id="totalPrice">Rs.80</span>
+    </div>
+
+    <div class="checkout-btn">
+        <button class="btn btn-success">Checkout</button>
+    </div>
+</div>
+
+<script>
+    const cartItems = [
+        { name: 'CARET', price: 80, quantity: 1, image: 'images/caret.jpg' },
+    ];
+
+    function updateTotalPrice() {
+        let total = 0;
+        document.querySelectorAll('.cart-item').forEach(item => {
+            const price = parseFloat(item.querySelector('.item-price').textContent.replace('$', ''));
+            const quantity = parseInt(item.querySelector('.item-quantity').value);
+            total += price * quantity;
+        });
+        document.getElementById('totalPrice').textContent = `$${total}`;
+    }
+
+    function renderCartItems() {
+        const cartItemsContainer = document.getElementById('cartItems');
+        cartItemsContainer.innerHTML = ''; 
+
+        cartItems.forEach(item => {
+            const itemDiv = document.createElement('div');
+            itemDiv.classList.add('cart-item');
+
+            itemDiv.innerHTML = `
+                <img src="${item.image}" alt="${item.name}">
+                <h4>${item.name}</h4>
+                <input type="number" value="${item.quantity}" min="1" class="item-quantity">
+                <p class="item-price">$${item.price}</p>
+                <button class="btn btn-danger remove-item">Remove</button>
+            `;
+
+            cartItemsContainer.appendChild(itemDiv);
+
+            itemDiv.querySelector('.item-quantity').addEventListener('change', updateTotalPrice);
+
+            itemDiv.querySelector('.remove-item').addEventListener('click', function () {
+                itemDiv.remove();
+                updateTotalPrice();
+            });
+        });
+
+        updateTotalPrice(); 
+    }
+
+    renderCartItems();
+</script>
+
+</body>
+</html>
